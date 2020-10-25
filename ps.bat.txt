@@ -1,0 +1,15 @@
+@echo off
+
+:: copy "C:\System Volume Information\WPSettings.dat" "C:\Test"
+
+
+:: https://www.geeksforgeeks.org/how-to-create-an-infinite-loop-in-windows-batch-file/
+:: https://stackoverflow.com/questions/21697199/how-to-increment-variable-under-dos
+
+set COUNTER=1
+
+
+:x
+set /A COUNTER=COUNTER+1
+echo %COUNTER%
+goto x

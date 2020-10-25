@@ -1,0 +1,236 @@
+PowerShell -NoProfile -ExecutionPolicy Bypass ./cert.ps1
+
+https://stackoverflow.com/questions/6345786/python-reading-a-pkcs12-certificate-with-pyopenssl-crypto
+
+# load OpenSSL.crypto
+from OpenSSL import crypto
+
+# open it, using password. Supply/read your own from stdin.
+p12 = crypto.load_pkcs12(open("/path/to/cert.p12", 'rb').read(), passwd)
+
+# get various properties of said file.
+# note these are PyOpenSSL objects, not strings although you
+# can convert them to PEM-encoded strings.
+p12.get_certificate()     # (signed) certificate object
+p12.get_privatekey()      # private key.
+p12.get_ca_certificates() # ca chain.
+
+
+=======================
+To get the mft record:
+======================
+Users/Documents = 21557
+fls \\.\c: 21557
+endswith('enc.txt')
+r/r 86335-128-3:        enc.txt
+mft_num=line.split(' ')[1].split('-')[0]
+
+======================
+To get attributes
+======================
+attr_l=[]
+istat \\.\c: 86335
+
+for line in out_l:
+if line.startswith('Type:')
+attr_str=line.split(':')[1].replace(' Name','').strip().replace('$','').replace('(','').replace(')','') #- Should give STANDARD_INFORMATION 16-0
+attr_l.append(attr_str)
+
+#-- need to hanndle ADS
+print(attr_l)
+
+Example:
+Attributes:
+Type: $STANDARD_INFORMATION (16-0)   Name: N/A   Resident   size: 72
+Type: $FILE_NAME (48-2)   Name: N/A   Resident   size: 80
+Type: $DATA (128-3)   Name: N/A   Non-Resident, Encrypted   size: 2800  init_size: 2800
+823509
+Type: $LOGGED_UTILITY_STREAM (256-5)   Name: $EFS   Non-Resident   size: 680  init_size: 680
+1875267
+
+======================
+To dump attributes
+======================
+icat \\.\c: 86335-256-5
+
+C:\Users\test\miniconda3
+conda init cmd.exe
+conda create --name py37 python=3.7
+conda activate py37
+pip install pyopenssl
+
+
+
+'''
+ERROR
+C:\Users\test\Documents>python 2.py
+Traceback (most recent call last):
+  File "2.py", line 36, in <module>
+    x=pkcs12.load_key_and_certificates(pfx_data, pfx_password, backend=None)
+  File "C:\Users\test\miniconda3\lib\site-packages\cryptography\hazmat\primitives\serialization\pkcs12.py", line 9, in load_key_and_certificates
+    return backend.load_key_and_certificates_from_pkcs12(data, password)
+AttributeError: 'NoneType' object has no attribute 'load_key_and_certificates_from_pkcs12'
+
+
+***SOLUTION***
+C:\Users\test\Documents>pip uninstall cryptography
+Found existing installation: cryptography 2.9.2
+Uninstalling cryptography-2.9.2:
+  Would remove:
+    c:\users\test\miniconda3\lib\site-packages\cryptography-2.9.2.dist-info\*
+    c:\users\test\miniconda3\lib\site-packages\cryptography\*
+Proceed (y/n)? y
+  Successfully uninstalled cryptography-2.9.2
+  
+  
+
+  C:\Users\test\Documents>pip install cryptography
+Collecting cryptography
+  Downloading cryptography-3.1.1-cp38-cp38-win_amd64.whl (1.5 MB)
+     |¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦| 1.5 MB 1.3 MB/s
+Requirement already satisfied: cffi!=1.11.3,>=1.8 in c:\users\test\miniconda3\lib\site-packages (from cryptography) (1.14.0)
+Requirement already satisfied: six>=1.4.1 in c:\users\test\miniconda3\lib\site-packages (from cryptography) (1.14.0)
+Requirement already satisfied: pycparser in c:\users\test\miniconda3\lib\site-packages (from cffi!=1.11.3,>=1.8->cryptography) (2.20)
+Installing collected packages: cryptography
+Successfully installed cryptography-3.1.1
+'''
+
+
+
+https://holdmybeersecurity.com/2017/07/29/rekall-memory-analysis-framework-for-windows-linux-and-mac-osx/
+rekal --live Memory
+
+
+[1] Live (Memory) 19:03:51> yarascan(binary_string="8c2798136d0a3bf12899d1d8de08addba7c8fe5e07874ca717b0bf9a738773db")
+2020-10-25 19:03:54,055:WARNING:rekall.1:Inventory for repository "http://profiles.rekall-forensic.com" seems malformed. Are you behind a captive portal or proxy? If this is a custom repository, did you forget to create an inventory? You must use the tools/profiles/build_profile_repo.py tool with the --inventory flag.
+2020-10-25 19:03:54,055:WARNING:rekall.1:Repository http://profiles.rekall-forensic.com will be disabled.
+       Owner            Rule        Offset                                   hexdump                               Context
+-------------------- ---------- -------------- ------------------------------------------------------------------- -------
+PhysicalAS           r1             0x3b529753 8c 27 98 13 6d 0a 3b f1 28 99 d1 d8 de 08 ad db  .'..m.;.(.......   phys_offset           0x3b529000
+                                               a7 c8 fe 5e 07 87 4c a7 17 b0 bf 9a 73 87 73 db  ...^..L.....s.s.   List            Active
+                                               00 00 00 00 00 09 6e fb ba de dc 0c 0c 00 00 00  ......n.........   Use             Private
+                                               00 00 00 00 00 b5 a8 46 16 00 00 00 00 75 b6 46  .......F.....u.F   Pr              -
+                                                                                                                   Process         0xcd0470a32080 rekal.exe  3308
+                                                                                                                   VA                  0x16469000
+PhysicalAS           r1             0x86bc58fc 8c 27 98 13 6d 0a 3b f1 28 99 d1 d8 de 08 ad db  .'..m.;.(.......   phys_offset           0x86bc5000
+                                               a7 c8 fe 5e 07 87 4c a7 17 b0 bf 9a 73 87 73 db  ...^..L.....s.s.   List            Active
+                                               00 00 00 00 8c 27 98 13 6d 0a 3b f1 28 99 d1 d8  .....'..m.;.(...   Use             Kernel
+                                               de 08 ad db a7 c8 fe 5e 07 87 4c a7 17 b0 bf 9a  .......^..L.....   Pr              -
+                                                                                                                   VA              0xcd0472059000
+PhysicalAS           r1             0x86bc5920 8c 27 98 13 6d 0a 3b f1 28 99 d1 d8 de 08 ad db  .'..m.;.(.......   phys_offset           0x86bc5000
+                                               a7 c8 fe 5e 07 87 4c a7 17 b0 bf 9a 73 87 73 db  ...^..L.....s.s.   List            Active
+                                               9a a8 21 9c f7 a2 1a 6d df 3b cb b5 01 33 66 6e  ..!....m.;...3fn   Use             Kernel
+                                               db 0b cd c1 dc 8c 81 66 cb 3c 3e fc b8 bb 4d 27  .......f.<>...M'   Pr              -
+                                                                                                                   VA              0xcd0472059000
+PhysicalAS           r1             0x918c473c 8c 27 98 13 6d 0a 3b f1 28 99 d1 d8 de 08 ad db  .'..m.;.(.......   phys_offset           0x918c4000
+                                               a7 c8 fe 5e 07 87 4c a7 17 b0 bf 9a 73 87 73 db  ...^..L.....s.s.   List            Active
+                                               00 00 00 00 00 00 00 00 00 00 00 00 de 6b 67 a3  .............kg.   Use             Private
+                                               00 34 00 80 00 00 00 00 00 00 00 00 00 00 00 00  .4..............   Pr              -
+                                                                                                                   Process         0xcd0470a32080 rekal.exe  3308
+                                                                                                                   VA                   0x61c7000
+PhysicalAS           r1             0x92409723 8c 27 98 13 6d 0a 3b f1 28 99 d1 d8 de 08 ad db  .'..m.;.(.......   phys_offset           0x92409000
+                                               a7 c8 fe 5e 07 87 4c a7 17 b0 bf 9a 73 87 73 db  ...^..L.....s.s.   List            Active
+                                               00 00 00 00 00 7c 69 f2 c1 53 64 0c 00 80 00 3b  .....|i..Sd....;   Use             Private
+                                               16 00 00 00 00 10 08 1c 06 00 00 00 00 00 00 00  ................   Pr              -
+                                                                                                                   Process         0xcd0470a32080 rekal.exe  3308
+                                                                                                                   VA                  0x1646b000
+PhysicalAS           r1            0x11ed52940 8c 27 98 13 6d 0a 3b f1 28 99 d1 d8 de 08 ad db  .'..m.;.(.......   phys_offset          0x11ed52000
+                                               a7 c8 fe 5e 07 87 4c a7 17 b0 bf 9a 73 87 73 db  ...^..L.....s.s.   List            Active
+                                               00 00 00 00 00 7c 69 f2 c1 53 64 0c 00 80 00 3b  .....|i..Sd....;   Use             Private
+                                               16 00 00 00 00 10 08 1c 06 00 00 00 00 00 00 00  ................   Pr              -
+                                                                                                                   Process         0xcd0470a32080 rekal.exe  3308
+                                                                                                                   VA                  0x1825b000
+Out<19:05:05> Plugin: yarascan (WinYaraScan)
+[1] Live (Memory) 19:05:05>
+
+
+===========================================================================================================================================================================
+
+
+C:\Windows\system32>rekal --live Memory
+
+----------------------------------------------------------------------------
+The Rekall Digital Forensic/Incident Response framework 1.6.0 (Gotthard).
+
+"We can remember it for you wholesale!"
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License.
+
+See http://www.rekall-forensic.com/docs/Manual/tutorial.html to get started.
+----------------------------------------------------------------------------
+[1] Live (Memory) 19:20:08> yarascan(binary_string="8cf3976c6a8b88298b98a606a4bae0fc64d8f27e93a4dcbd03eb0973160540d6")
+2020-10-25 19:20:10,644:WARNING:rekall.1:Inventory for repository "http://profiles.rekall-forensic.com" seems malformed. Are you behind a captive portal or proxy? If this is a custom repository, did you forget to create an inventory? You must use the tools/profiles/build_profile_repo.py tool with the --inventory flag.
+2020-10-25 19:20:10,644:WARNING:rekall.1:Repository http://profiles.rekall-forensic.com will be disabled.
+       Owner            Rule        Offset                                   hexdump                               Context
+-------------------- ---------- -------------- ------------------------------------------------------------------- -------
+PhysicalAS           r1             0x242db753 8c f3 97 6c 6a 8b 88 29 8b 98 a6 06 a4 ba e0 fc  ...lj..)........   phys_offset           0x242db000
+                                               64 d8 f2 7e 93 a4 dc bd 03 eb 09 73 16 05 40 d6  d..~.......s..@.   List            Active
+                                               00 00 00 00 00 9b c5 fa d5 51 b4 0c 0c 00 00 00  .........Q......   Use             Private
+                                               00 00 00 00 00 b5 a8 4f 16 00 00 00 00 75 b6 4f  .......O.....u.O   Pr              -
+                                                                                                                   Process         0xcd046fe20440 rekal.exe  4600
+                                                                                                                   VA                  0x164f9000
+PhysicalAS           r1             0x291488bc 8c f3 97 6c 6a 8b 88 29 8b 98 a6 06 a4 ba e0 fc  ...lj..)........   phys_offset           0x29148000
+                                               64 d8 f2 7e 93 a4 dc bd 03 eb 09 73 16 05 40 d6  d..~.......s..@.   List            Active
+                                               00 00 00 00 00 00 00 00 00 00 00 00 48 1d c4 74  ............H..t   Use             Private
+                                               00 3a 00 80 00 00 00 00 00 00 00 00 00 00 00 00  .:..............   Pr              -
+                                                                                                                   Process         0xcd046fe20440 rekal.exe  4600
+                                                                                                                   VA                   0x6317000
+PhysicalAS           r1             0x29b5d723 8c f3 97 6c 6a 8b 88 29 8b 98 a6 06 a4 ba e0 fc  ...lj..)........   phys_offset           0x29b5d000
+                                               64 d8 f2 7e 93 a4 dc bd 03 eb 09 73 16 05 40 d6  d..~.......s..@.   List            Active
+                                               00 00 00 00 00 ee c2 f3 ae dc 0c 0c 00 80 00 44  ...............D   Use             Private
+                                               16 00 00 00 00 10 08 31 06 00 00 00 00 00 00 00  .......1........   Pr              -
+                                                                                                                   Process         0xcd046fe20440 rekal.exe  4600
+                                                                                                                   VA                  0x164fb000
+PhysicalAS           r1             0x930a4ef0 8c f3 97 6c 6a 8b 88 29 8b 98 a6 06 a4 ba e0 fc  ...lj..)........   phys_offset           0x930a4000
+                                               64 d8 f2 7e 93 a4 dc bd 03 eb 09 73 16 05 40 d6  d..~.......s..@.   List            Active
+                                               00 00 00 00 00 ee c2 f3 ae dc 0c 0c 00 80 00 44  ...............D   Use             Private
+                                               16 00 00 00 00 10 08 31 06 00 00 00 00 00 00 00  .......1........   Pr              -
+                                                                                                                   Process         0xcd046fe20440 rekal.exe  4600
+                                                                                                                   VA                  0x172e0000
+PhysicalAS           r1             0xbc3a1dcc 8c f3 97 6c 6a 8b 88 29 8b 98 a6 06 a4 ba e0 fc  ...lj..)........   phys_offset           0xbc3a1000
+                                               64 d8 f2 7e 93 a4 dc bd 03 eb 09 73 16 05 40 d6  d..~.......s..@.   List            Active
+                                               00 00 00 00 8c f3 97 6c 6a 8b 88 29 8b 98 a6 06  .......lj..)....   Use             Kernel
+                                               a4 ba e0 fc 64 d8 f2 7e 93 a4 dc bd 03 eb 09 73  ....d..~.......s   Pr              -
+                                                                                                                   VA              0xcd0471f93000
+PhysicalAS           r1             0xbc3a1df0 8c f3 97 6c 6a 8b 88 29 8b 98 a6 06 a4 ba e0 fc  ...lj..)........   phys_offset           0xbc3a1000
+                                               64 d8 f2 7e 93 a4 dc bd 03 eb 09 73 16 05 40 d6  d..~.......s..@.   List            Active
+                                               e6 fa 61 2b 8c 71 e9 02 07 e9 4f 04 a3 53 af f8  ..a+.q....O..S..   Use             Kernel
+                                               6e 35 8b 3f fd 91 57 82 fe 7a 5e f1 e8 7f 1e 27  n5.?..W..z^....'   Pr              -
+                                                                                                                   VA              0xcd0471f93000
+Out<19:21:24> Plugin: yarascan (WinYaraScan)
+[1] Live (Memory) 19:21:35> ptov 0x242db753
+--------------------------> ptov(0x242db753)
+DTB 0xb849000 Owning process: 0xcd046fe20440 rekal.exe  4600
+PML4E@ 0xb849c78 = 0x800000000b849863
+PDPTE@ 0xb849000 = 0xc0000015545867
+PDE@ 0x15545000 = 0xd00000681c6867
+PTE@ 0x681c6590 = 0x16200000ab775867
+Physical Address 0x242db753
+Virtual Address     0x164f9753 (DTB      0xb849000)
+Out<19:21:35> Plugin: ptov (PtoV)
+[1] Live (Memory) 19:21:59> ptov 0xbc3a1dcc
+--------------------------> ptov(0xbc3a1dcc)
+DTB 0x1aa000 Owning process: 0xcd046e6ab040 System     4
+PML4E@ 0x1aac78 = 0x80000000001aa063
+PDPTE@ 0x1aacd0 = 0x7b6863
+PDE@ 0x7b6088 = 0x7b5863
+PTE@ 0x7b5c78 = 0x51557863
+Physical Address 0xbc3a1dcc
+Virtual Address 0xcd0471f93dcc (DTB       0x1aa000)
+Out<19:21:59> Plugin: ptov (PtoV)
+[1] Live (Memory) 19:22:21> ptov 0xbc3a1df0
+--------------------------> ptov(0xbc3a1df0)
+DTB 0x1aa000 Owning process: 0xcd046e6ab040 System     4
+PML4E@ 0x1aac78 = 0x80000000001aa063
+PDPTE@ 0x1aacd0 = 0x7b6863
+PDE@ 0x7b6088 = 0x7b5863
+PTE@ 0x7b5c78 = 0x51557863
+Physical Address 0xbc3a1df0
+Virtual Address 0xcd0471f93df0 (DTB       0x1aa000)
+Out<19:22:21> Plugin: ptov (PtoV)
+
+
+
+https://rekall.readthedocs.io/en/latest/efilter.html
+https://rekall.readthedocs.io/en/latest/plugins.html

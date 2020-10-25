@@ -1,0 +1,18 @@
+@echo off
+:: References:
+:: Parsing batch file output: https://devblogs.microsoft.com/oldnewthing/20120731-00/?p=7003
+:: Removing spaces from a var: https://stackoverflow.com/questions/44207946/remove-spaces-in-batch-variable
+:: Syntax reference: https://www.tutorialspoint.com/batch_script/batch_script_comments.htm
+
+:: Get the next usn id
+FOR /f "tokens=2 delims=:" %%a IN ('fsutil usn queryjournal c: ^| findstr "Next usn"') do set nextusn=%%a
+set "nextusn=%nextusn: =%"
+
+
+
+psexec -s -i copy "C:\System Volume Information\WPSettings.dat" "C:\Test"
+
+
+
+:: Read the USN journal starting from the next iteration of the script. 
+fsutil usn readjournal c: startusn=%nextusn% csv
